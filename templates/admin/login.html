@@ -1,0 +1,139 @@
+{% extends "admin/login.html" %}
+{% load i18n static %}
+
+{% block extrastyle %}
+{{ block.super }}
+<style>
+    body {
+        background: linear-gradient(135deg, #f0f4f8 0%, #d7e3f1 100%);
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        margin: 0;
+    }
+
+    #container {
+        background: white;
+        border: none;
+        border-radius: 20px;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 450px;
+        padding: 40px;
+        margin: 20px;
+    }
+
+    #header {
+        background: none;
+        color: #1a3a5c;
+        text-align: center;
+        padding: 0;
+        margin-bottom: 30px;
+    }
+
+    #header #branding h1 {
+        font-size: 2.5rem;
+        font-weight: 800;
+        margin: 0;
+        color: #4a90d9;
+    }
+
+    #header #branding h1::before {
+        content: '🧠';
+        display: block;
+        font-size: 3rem;
+        margin-bottom: 10px;
+    }
+
+    .login .form-row {
+        padding: 0;
+        margin-bottom: 20px;
+        border: none;
+        background: none;
+    }
+
+    .login label {
+        display: block;
+        font-weight: 600;
+        color: #555;
+        margin-bottom: 8px;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .login input[type="text"],
+    .login input[type="password"] {
+        width: 100%;
+        padding: 12px 15px;
+        border: 2px solid #e1e8ed;
+        border-radius: 10px;
+        font-size: 1rem;
+        transition: border-color 0.3s, box-shadow 0.3s;
+        box-sizing: border-box;
+    }
+
+    .login input[type="text"]:focus,
+    .login input[type="password"]:focus {
+        border-color: #4a90d9;
+        box-shadow: 0 0 0 4px rgba(74, 144, 217, 0.1);
+        outline: none;
+    }
+
+    .submit-row {
+        padding: 0;
+        margin-top: 30px;
+        background: none;
+        border: none;
+        text-align: center;
+    }
+
+    .submit-row input {
+        background: linear-gradient(135deg, #4A90D9, #2d6a9f);
+        color: white;
+        padding: 14px 30px;
+        border: none;
+        border-radius: 10px;
+        font-size: 1.1rem;
+        font-weight: 700;
+        cursor: pointer;
+        width: 100%;
+        transition: transform 0.2s, box-shadow 0.2s;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .submit-row input:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(74, 144, 217, 0.4);
+    }
+
+    .errornote {
+        background: #fff5f5;
+        color: #e53e3e;
+        border: 1px solid #feb2b2;
+        border-radius: 8px;
+        padding: 12px;
+        margin-bottom: 20px;
+        font-size: 0.9rem;
+    }
+
+    .login footer {
+        display: none;
+    }
+
+    #content-main {
+        width: 100%;
+    }
+</style>
+{% endblock %}
+
+{% block branding %}
+<h1 id="site-name">MindSpace</h1>
+{% endblock %}
+
+{% block content %}
+{{ block.super }}
+{% endblock %}

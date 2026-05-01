@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %}Respond to Post{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-7">
+        <div class="card">
+            <div class="card-header"><h5 class="mb-0">Respond to Anonymous Post</h5></div>
+            <div class="card-body">
+                <div class="bg-light p-3 rounded mb-4">
+                    <strong>Post:</strong><p class="mb-0 mt-2">{{ post.message }}</p>
+                </div>
+                <form method="post">
+                    {% csrf_token %}
+                    {% for field in form %}
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">{{ field.label }}</label>
+                        {{ field }}
+                    </div>
+                    {% endfor %}
+                    <button type="submit" class="btn btn-primary">Submit Response</button>
+                    <a href="{% url 'anonymous_posts' %}" class="btn btn-outline-secondary ms-2">Cancel</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

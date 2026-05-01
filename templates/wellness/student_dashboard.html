@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% block title %}Student Dashboard{% endblock %}
+{% block content %}
+<h3 class="mb-4">👋 Welcome, {{ user.get_full_name|default:user.username }}!</h3>
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="card text-center p-3 h-100" style="border-left: 4px solid #4A90D9;">
+            <i class="fas fa-book-open fa-2x text-primary mb-2"></i>
+            <h6>Wellness Resources</h6>
+            <p class="text-muted small">Access articles, videos and tips</p>
+            <a href="{% url 'resource_list' %}" class="btn btn-primary btn-sm">Browse</a>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-center p-3 h-100" style="border-left: 4px solid #5CB85C;">
+            <i class="fas fa-calendar-plus fa-2x text-success mb-2"></i>
+            <h6>Book a Session</h6>
+            <p class="text-muted small">Connect with a counselor</p>
+            <a href="{% url 'book_session' %}" class="btn btn-success btn-sm">Book Now</a>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-center p-3 h-100" style="border-left: 4px solid #9b59b6;">
+            <i class="fas fa-user-secret fa-2x text-purple mb-2" style="color:#9b59b6;"></i>
+            <h6>Anonymous Support</h6>
+            <p class="text-muted small">Share without revealing identity</p>
+            <a href="{% url 'post_anonymous' %}" class="btn btn-sm" style="background:#9b59b6;color:white;">Post Anonymously</a>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header"><h6 class="mb-0">📅 My Recent Sessions</h6></div>
+            <div class="card-body">
+                {% for s in sessions %}
+                <div class="d-flex justify-content-between align-items-center mb-2 p-2 bg-light rounded">
+                    <div><strong>{{ s.counselor.get_full_name|default:s.counselor.username }}</strong><br><small>{{ s.date|date:"M d, Y H:i" }}</small></div>
+                    <span class="badge bg-{{ s.status|lower }}">{{ s.status|capfirst }}</span>
+                </div>
+                {% empty %}<p class="text-muted text-center">No sessions yet. <a href="{% url 'book_session' %}">Book one!</a></p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header"><h6 class="mb-0">📚 Latest Resources</h6></div>
+            <div class="card-body">
+                {% for r in resources %}
+                <div class="mb-2">
+                    <a href="{% url 'resource_detail' r.pk %}" class="text-decoration-none">
+                        <span class="badge bg-secondary me-1">{{ r.resource_type }}</span> {{ r.title }}
+                    </a>
+                </div>
+                {% empty %}<p class="text-muted">No resources yet.</p>{% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

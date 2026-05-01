@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block title %}Update Session{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header fw-bold py-3" style="background:#f0f7ff;">✏️ Update Session</div>
+            <div class="card-body p-4">
+                <p><strong>Student:</strong> {{ session.student.get_full_name|default:session.student.username }} | <strong>Date:</strong> {{ session.date }}</p>
+                <form method="post">
+                    {% csrf_token %}
+                    {% for field in form %}
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">{{ field.label }}</label>
+                        {{ field }}
+                    </div>
+                    {% endfor %}
+                    <button type="submit" class="btn btn-primary">Update</button>
+                    <a href="{% url 'counseling_list' %}" class="btn btn-outline-secondary ms-2">Cancel</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

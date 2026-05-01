@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% block title %}Login{% endblock %}
+{% block content %}
+<div class="row justify-content-center mt-5">
+    <div class="col-md-5">
+        <div class="card shadow-lg">
+            <div class="card-header text-center py-4">
+                <h2 class="mb-0">🧠 MindSpace</h2>
+                <small>Student Mental Health Platform</small>
+            </div>
+            <div class="card-body p-4">
+                <h4 class="mb-4 text-center">Welcome Back</h4>
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Login As</label>
+                        <div class="d-flex gap-2">
+                            <input type="radio" class="btn-check" name="role_select" id="role_student" value="student"
+                                checked>
+                            <label class="btn btn-outline-primary w-100" for="role_student">🎓 Student</label>
+
+                            <input type="radio" class="btn-check" name="role_select" id="role_counselor"
+                                value="counselor">
+                            <label class="btn btn-outline-success w-100" for="role_counselor">🩺 Counselor</label>
+
+                            <input type="radio" class="btn-check" name="role_select" id="role_admin" value="admin">
+                            <label class="btn btn-outline-danger w-100" for="role_admin">⚙️ Admin</label>
+                        </div>
+                    </div>
+                    {% for field in form %}
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">{{ field.label }}</label>
+                        {{ field }}
+                        {% if field.errors %}<div class="text-danger small">{{ field.errors }}</div>{% endif %}
+                    </div>
+                    {% endfor %}
+                    <button type="submit" class="btn btn-primary w-100 py-2 mt-2">Login</button>
+                </form>
+                <hr>
+                <p class="text-center mb-0">Don't have an account? <a href="{% url 'register' %}">Register here</a></p>
+                <p class="text-center mt-2"><a href="{% url 'post_anonymous' %}">🔒 Anonymous Support</a> (No login
+                    required)</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block title %}My Anonymous Posts{% endblock %}
+{% block content %}
+<div class="card mb-4">
+    <div class="card-header fw-bold py-3" style="background:#f0f7ff;">🔍 Check Post Response</div>
+    <div class="card-body">
+        <form method="get" class="d-flex gap-2">
+            <input type="text" name="token" value="{{ token }}" placeholder="Enter your post token (UUID)" class="form-control" required>
+            <button type="submit" class="btn btn-primary px-4">Search</button>
+        </form>
+    </div>
+</div>
+{% if posts %}
+{% for post in posts %}
+<div class="card mb-3">
+    <div class="card-body">
+        <p><strong>Your message:</strong> {{ post.message }}</p>
+        {% if post.is_responded %}
+        <div class="p-3 bg-light rounded"><strong>Counselor's Response:</strong><p class="mb-0 mt-1">{{ post.response }}</p></div>
+        <small class="text-muted">Responded on {{ post.responded_at|date:"d M Y" }}</small>
+        {% else %}
+        <div class="alert alert-warning mb-0">⏳ Your post is pending a response. Please check back later.</div>
+        {% endif %}
+    </div>
+</div>
+{% endfor %}
+{% elif token %}
+<div class="alert alert-danger">No post found with that token.</div>
+{% endif %}
+{% endblock %}

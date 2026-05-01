@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block title %}Book Session{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header fw-bold py-3" style="background:#f0f7ff;">📅 Book a Counseling Session</div>
+            <div class="card-body p-4">
+                <form method="post">
+                    {% csrf_token %}
+                    {% for field in form %}
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">{{ field.label }}</label>
+                        {{ field }}
+                        {% if field.errors %}<div class="text-danger small">{{ field.errors }}</div>{% endif %}
+                    </div>
+                    {% endfor %}
+                    <button type="submit" class="btn btn-primary btn-lg w-100">Book Session</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

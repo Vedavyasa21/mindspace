@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block title %}Wellness Resources{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h4 class="fw-bold mb-0">📚 Wellness Resources</h4>
+    {% if user.role == 'admin' %}<a href="{% url 'wellness_add' %}" class="btn btn-primary"><i class="bi bi-plus"></i> Add Resource</a>{% endif %}
+</div>
+<div class="mb-3">
+    <a href="{% url 'wellness_list' %}" class="btn btn-sm {% if not selected_type %}btn-primary{% else %}btn-outline-primary{% endif %} me-1">All</a>
+    {% for val, label in resources.model.TYPE_CHOICES %}
+    <a href="?type={{ val }}" class="btn btn-sm {% if selected_type == val %}btn-primary{% else %}btn-outline-primary{% endif %} me-1">{{ label }}</a>
+    {% endfor %}
+</div>
+<div class="row g-3">
+    {% for r in resources %}
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <span class="badge bg-info mb-2">{{ r.get_resource_type_display }}</span>
+                <h6 class="fw-bold">{{ r.title }}</h6>
+                <p class="text-muted small">{{ r.content|truncatewords:20 }}</p>
+            </div>
+            <div class="card-footer bg-transparent d-flex justify-content-between">
+                <a href="{% url 'wellness_detail' r.pk %}" class="btn btn-sm btn-outline-primary">Read More</a>
+                {% if user.role == 'admin' %}<a href="{% url 'wellness_delete' r.pk %}" class="btn btn-sm btn-outline-danger" onclick="return confirm('Delete?')">Delete</a>{% endif %}
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12"><div class="alert alert-info">No resources found.</div></div>
+    {% endfor %}
+</div>
+{% endblock %}

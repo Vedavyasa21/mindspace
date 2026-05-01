@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+{% block title %}My Wellness Progress{% endblock %}
+{% block content %}
+<div class="row g-4">
+    <!-- Stats Header -->
+    <div class="col-12">
+        <div class="card bg-primary text-white p-4 rounded-4 border-0 shadow-sm">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h3 class="fw-bold mb-1">Hello, {{ request.user.first_name }}! 👋</h3>
+                    <p class="mb-0 opacity-75">You're doing great. Keep focus on your mental wellness.</p>
+                </div>
+                <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                    <div class="d-inline-block text-center px-4 py-2 bg-white text-primary rounded-pill shadow-sm">
+                        <div class="fs-4 fw-bold">{{ progress.points }}</div>
+                        <div class="text-uppercase small fw-bold">Total Points</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Streak & Stats -->
+    <div class="col-md-4">
+        <div class="card rounded-4 border-0 shadow-sm h-100">
+            <div class="card-body text-center p-4">
+                <div class="fs-1 mb-2">🔥</div>
+                <h2 class="fw-bold">{{ progress.streak_count }}</h2>
+                <p class="text-muted">Day Wellness Streak</p>
+                <hr>
+                <div class="text-start">
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Daily Activity</span>
+                        <span class="badge bg-success">Active</span>
+                    </div>
+                    <div class="progress" style="height: 10px;">
+                        <div class="progress-bar bg-success" style="width: 100%;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Badges Grid -->
+    <div class="col-md-8">
+        <div class="card rounded-4 border-0 shadow-sm h-100">
+            <div class="card-header bg-white border-0 py-3">
+                <h5 class="fw-bold mb-0">🏆 Achievements & Badges</h5>
+            </div>
+            <div class="card-body">
+                <div class="row g-3">
+                    {% for badge in badges %}
+                    <div class="col-md-4 col-6">
+                        <div class="text-center p-3 rounded-4 border {% if badge.id in user_badges %}bg-light border-primary{% else %}opacity-50 border-dashed{% endif %} h-100 transition-hover">
+                            <div class="fs-1 mb-2">
+                                {% if badge.id in user_badges %}
+                                    {{ badge.icon }}
+                                {% else %}
+                                    🔒
+                                {% endif %}
+                            </div>
+                            <div class="fw-bold small">{{ badge.name }}</div>
+                            <p class="text-muted mb-0" style="font-size: 0.7rem;">{{ badge.description }}</p>
+                            {% if badge.id in user_badges %}
+                                <span class="badge bg-primary mt-2">Unlocked</span>
+                            {% else %}
+                                <span class="badge bg-secondary mt-2">{{ badge.points_required }} pts required</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .transition-hover {
+        transition: transform 0.2s;
+    }
+
+    .transition-hover:hover {
+        transform: translateY(-3px);
+    }
+
+    .border-dashed {
+        border-style: dashed !important;
+    }
+</style>
+{% endblock %}

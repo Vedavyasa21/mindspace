@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block title %}Counseling Sessions{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h4 class="fw-bold mb-0">📅 Counseling Sessions</h4>
+    {% if user.role == 'student' %}<a href="{% url 'counseling_book' %}" class="btn btn-primary"><i class="bi bi-plus"></i> Book Session</a>{% endif %}
+</div>
+<div class="card">
+    <div class="card-body p-0">
+        <table class="table table-hover mb-0">
+            <thead style="background:#f0f7ff;">
+                <tr>
+                    <th class="px-3 py-3">{% if user.role == 'student' %}Counselor{% else %}Student{% endif %}</th>
+                    <th>Date & Time</th><th>Reason</th><th>Status</th><th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for s in sessions %}
+                <tr>
+                    <td class="px-3">{% if user.role == 'student' %}{{ s.counselor.get_full_name|default:s.counselor.username }}{% else %}{{ s.student.get_full_name|default:s.student.username }}{% endif %}</td>
+                    <td>{{ s.date }} <span class="text-muted">{{ s.time }}</span></td>
+                    <td>{{ s.reason|truncatewords:8 }}</td>
+                    <td><span class="badge bg-{% if s.status == 'pending' %}warning text-dark{% elif s.status == 'accepted' %}success{% elif s.status == 'completed' %}info{% else %}secondary{% endif %}">{{ s.status|title }}</span></td>
+                    <td>
+                        <a href="{% url 'counseling_detail' s.pk %}" class="btn btn-sm btn-outline-primary">View</a>
+                        {% if user.role in 'counselor,admin' %}<a href="{% url 'counseling_update' s.pk %}" class="btn btn-sm btn-outline-success ms-1">Update</a>{% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="5" class="text-center py-4 text-muted">No sessions found. {% if user.role == 'student' %}<a href="{% url 'counseling_book' %}">Book one now!</a>{% endif %}</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

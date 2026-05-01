@@ -1,0 +1,193 @@
+{% extends 'base.html' %}
+{% block title %}AI Mood Chatbot{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow-sm border-0 rounded-4 overflow-hidden">
+            <div class="card-header bg-primary text-white p-3 d-flex align-items-center justify-content-between">
+                <div class="d-flex align-items-center gap-2">
+                    <span class="fs-4">🤖</span>
+                    <div>
+                        <h5 class="mb-0 fw-bold">MindSpace AI</h5>
+                        <small class="opacity-75">Your wellness companion</small>
+                    </div>
+                </div>
+                <div id="mood-badge-container">
+                    <!-- Current Mood Badge will appear here -->
+                </div>
+            </div>
+
+            <div id="chat-box" class="card-body p-4 bg-light" style="height: 500px; overflow-y: auto;">
+                {% for chat in history %}
+                <div class="mb-3 text-end">
+                    <div class="d-inline-block bg-primary text-white p-3 rounded-4 rounded-bottom-0 shadow-sm"
+                        style="max-width: 80%;">
+                        {{ chat.message }}
+                    </div>
+                </div>
+                <div class="mb-3 text-start">
+                    <div class="d-inline-block bg-white text-dark p-3 rounded-4 rounded-top-0 shadow-sm border"
+                        style="max-width: 80%;">
+                        {{ chat.response }}
+                        <div class="mt-1 small text-muted text-end">
+                            <span class="badge bg-secondary opacity-75">{{ chat.mood }}</span>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="text-center py-5">
+                    <div class="fs-1 mb-3">👋</div>
+                    <h5>Hello! I'm your AI companion.</h5>
+                    <p class="text-muted">How are you feeling today?</p>
+                </div>
+                {% endfor %}
+                <div id="typing-indicator" class="mb-3 text-start d-none">
+                    <div class="d-inline-block bg-white p-3 rounded-4 shadow-sm border">
+                        <div class="typing-dots">
+                            <span></span><span></span><span></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-footer bg-white p-3 border-top-0">
+                <div class="d-flex flex-wrap gap-2 mb-3">
+                    <button class="btn btn-sm btn-outline-secondary quick-btn" data-msg="I'm feeling anxious">😟 I'm
+                        feeling anxious</button>
+                    <button class="btn btn-sm btn-outline-secondary quick-btn" data-msg="Stressed about exams">😫
+                        Stressed about exams</button>
+                    <button class="btn btn-sm btn-outline-secondary quick-btn" data-msg="Feeling a bit down">😢 Feeling
+                        a bit down</button>
+                    <button class="btn btn-sm btn-outline-secondary quick-btn" data-msg="Had a great day!">😊 Had a
+                        great day!</button>
+                </div>
+
+                <form id="chat-form" class="input-group">
+                    {% csrf_token %}
+                    <input type="text" id="user-input" class="form-control border-end-0 py-2 px-3 focus-none"
+                        placeholder="Type how you feel..." required>
+                    <button class="btn btn-primary px-4" type="submit">
+                        <i class="bi bi-send-fill"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .focus-none:focus {
+        box-shadow: none;
+        border-color: #dee2e6;
+    }
+
+    .typing-dots span {
+        width: 8px;
+        height: 8px;
+        margin: 0 2px;
+        background: #ccc;
+        border-radius: 50%;
+        display: inline-block;
+        animation: typing 1.4s infinite ease-in-out both;
+    }
+
+    .typing-dots span:nth-child(1) {
+        animation-delay: -0.32s;
+    }
+
+    .typing-dots span:nth-child(2) {
+        animation-delay: -0.16s;
+    }
+
+    @keyframes typing {
+
+        0%,
+        80%,
+        100% {
+            transform: scale(0);
+        }
+
+        40% {
+            transform: scale(1.0);
+        }
+    }
+</style>
+
+<script>
+    const chatBox = document.getElementById('chat-box');
+    const chatForm = document.getElementById('chat-form');
+    const userInput = document.getElementById('user-input');
+    const typingIndicator = document.getElementById('typing-indicator');
+    const moodBadgeContainer = document.getElementById('mood-badge-container');
+
+    function scrollToBottom() {
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
+    scrollToBottom();
+
+    function addMessage(msg, isUser, badge = null) {
+        const div = document.createElement('div');
+        div.className = isUser ? 'mb-3 text-end' : 'mb-3 text-start';
+
+        let html = `
+        <div class="d-inline-block ${isUser ? 'bg-primary text-white' : 'bg-white text-dark'} p-3 rounded-4 shadow-sm ${isUser ? 'rounded-bottom-0' : 'rounded-top-0 border'}" style="max-width: 80%;">
+            ${msg}
+    `;
+
+        if (badge) {
+            html += `<div class="mt-1 small text-muted text-end"><span class="badge bg-secondary opacity-75">${badge}</span></div>`;
+        }
+
+        html += '</div>';
+        div.innerHTML = html;
+        chatBox.insertBefore(div, typingIndicator);
+        scrollToBottom();
+    }
+
+    chatForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const msg = userInput.value.trim();
+        if (!msg) return;
+
+        userInput.value = '';
+        addMessage(msg, true);
+
+        typingIndicator.classList.remove('d-none');
+        scrollToBottom();
+
+        try {
+            const response = await fetch('', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                body: JSON.stringify({ message: msg })
+            });
+
+            const data = await response.json();
+
+            setTimeout(() => {
+                typingIndicator.classList.add('d-none');
+                addMessage(data.response, false, data.mood);
+                moodBadgeContainer.innerHTML = `<span class="badge bg-light text-primary px-3 py-2 rounded-pill shadow-sm">${data.mood}</span>`;
+                if (data.points_added) {
+                    // Show a small notification for points if needed
+                }
+            }, 1000);
+
+        } catch (error) {
+            typingIndicator.classList.add('d-none');
+            console.error('Error:', error);
+        }
+    });
+
+    document.querySelectorAll('.quick-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            userInput.value = btn.dataset.msg;
+            chatForm.dispatchEvent(new Event('submit'));
+        });
+    });
+</script>
+{% endblock %}

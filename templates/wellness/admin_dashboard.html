@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% block title %}Admin Dashboard{% endblock %}
+{% block content %}
+<h3 class="mb-4">📊 Admin Dashboard</h3>
+<div class="row">
+    <div class="col-md-3"><div class="stat-card blue"><div class="fs-1 fw-bold">{{ total_students }}</div><div>Total Students</div></div></div>
+    <div class="col-md-3"><div class="stat-card green"><div class="fs-1 fw-bold">{{ total_counselors }}</div><div>Total Counselors</div></div></div>
+    <div class="col-md-3"><div class="stat-card orange"><div class="fs-1 fw-bold">{{ total_sessions }}</div><div>Total Sessions</div></div></div>
+    <div class="col-md-3"><div class="stat-card purple"><div class="fs-1 fw-bold">{{ total_posts }}</div><div>Anonymous Posts</div></div></div>
+</div>
+<div class="row mt-4">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header"><h5 class="mb-0">Recent Sessions</h5></div>
+            <div class="card-body">
+                <table class="table">
+                    <thead><tr><th>Student</th><th>Counselor</th><th>Date</th><th>Status</th></tr></thead>
+                    <tbody>
+                    {% for s in recent_sessions %}
+                    <tr>
+                        <td>{{ s.student.username }}</td>
+                        <td>{{ s.counselor.username }}</td>
+                        <td>{{ s.date|date:"M d, Y" }}</td>
+                        <td><span class="badge badge-{{ s.status }}">{{ s.status|capfirst }}</span></td>
+                    </tr>
+                    {% empty %}<tr><td colspan="4" class="text-center text-muted">No sessions yet</td></tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header"><h5 class="mb-0">Counselors</h5></div>
+            <div class="card-body">
+                {% for c in counselors %}
+                <div class="d-flex align-items-center mb-3">
+                    <div style="width:40px;height:40px;background:#4A90D9;border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-weight:bold;margin-right:10px;">{{ c.username|first|upper }}</div>
+                    <div><div class="fw-semibold">{{ c.get_full_name|default:c.username }}</div><small class="text-muted">{{ c.specialization|default:"General Counseling" }}</small></div>
+                </div>
+                {% empty %}<p class="text-muted">No counselors registered</p>{% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

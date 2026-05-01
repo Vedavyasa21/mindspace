@@ -1,0 +1,112 @@
+{% extends "admin/index.html" %}
+{% load i18n static %}
+
+{% block extrastyle %}
+{{ block.super }}
+<style>
+    #content {
+        padding: 40px;
+        background: var(--bg-dark);
+    }
+
+    .dashboard #content-main {
+        float: none;
+        width: 100%;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+        gap: 25px;
+    }
+
+    .module {
+        background: var(--surface-dark) !important;
+        border: 1px solid var(--border-color) !important;
+        border-radius: 16px !important;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2) !important;
+        overflow: hidden !important;
+        margin-bottom: 0 !important;
+    }
+
+    .module caption,
+    .module h2 {
+        background: rgba(255, 255, 255, 0.03) !important;
+        color: var(--text-main) !important;
+        padding: 1.25rem 1.5rem !important;
+        font-family: 'Outfit', sans-serif;
+        font-weight: 700 !important;
+        font-size: 1.1rem !important;
+        border-bottom: 1px solid var(--border-color) !important;
+    }
+
+    .module table {
+        width: 100% !important;
+        border-collapse: separate !important;
+        border-spacing: 0 !important;
+    }
+
+    .module table th,
+    .module table td {
+        padding: 1rem 1.5rem !important;
+        border-bottom: 1px solid var(--border-color) !important;
+    }
+
+    .module table tr:last-child td {
+        border-bottom: none !important;
+    }
+
+    .module table th {
+        background: rgba(255, 255, 255, 0.02) !important;
+        color: var(--text-muted) !important;
+        text-transform: uppercase !important;
+        font-size: 0.75rem !important;
+        letter-spacing: 0.05em !important;
+    }
+
+    .module table td a {
+        color: var(--text-main) !important;
+        font-weight: 600 !important;
+        transition: color 0.2s !important;
+    }
+
+    .module table td a:hover {
+        color: var(--accent) !important;
+    }
+
+    .addlink,
+    .changelink {
+        color: var(--accent) !important;
+        font-weight: 700 !important;
+    }
+
+    #content-related {
+        margin-top: 40px !important;
+        width: 100% !important;
+        float: none !important;
+        background: var(--surface-dark) !important;
+        border: 1px solid var(--border-color) !important;
+        border-radius: 16px !important;
+        padding: 2rem !important;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2) !important;
+    }
+
+    #content-related h2 {
+        color: var(--text-main) !important;
+        font-family: 'Outfit', sans-serif;
+        font-size: 1.25rem !important;
+        margin-bottom: 1.5rem !important;
+        border-bottom: 1px solid var(--border-color) !important;
+        padding-bottom: 1rem !important;
+    }
+
+    .sidebar-title {
+        color: var(--accent) !important;
+        font-family: 'Outfit', sans-serif;
+        font-weight: 800 !important;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div id="content-main">
+    {% include "admin/app_list.html" with app_list=app_list %}
+</div>
+{% endblock %}

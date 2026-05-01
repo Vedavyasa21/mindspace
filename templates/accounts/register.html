@@ -1,0 +1,180 @@
+{% extends 'base.html' %}
+{% block title %}Register - MindSpace{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+
+        <!-- STEP 1: Role Selection (shown first) -->
+        <div id="step1">
+            <div class="card mt-4">
+                <div class="card-header text-white text-center py-4"
+                    style="background: linear-gradient(135deg, #2c5f8a, #4a90d9);">
+                    <h4 class="mb-0">🧠 Join MindSpace</h4>
+                    <small class="opacity-75">Who are you registering as?</small>
+                </div>
+                <div class="card-body p-4">
+                    <div class="row g-3 mt-1">
+
+                        <div class="col-12">
+                            <div class="card p-3 role-card" onclick="selectRole('student')"
+                                style="cursor:pointer; border: 2px solid #dee2e6; transition: all 0.2s;">
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="fs-1">🎓</div>
+                                    <div>
+                                        <div class="fw-bold fs-5">Student</div>
+                                        <div class="text-muted small">Access counseling, wellness resources & anonymous
+                                            support</div>
+                                    </div>
+                                    <div class="ms-auto"><i class="bi bi-arrow-right-circle fs-4 text-primary"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                            <div class="card p-3 role-card" onclick="selectRole('counselor')"
+                                style="cursor:pointer; border: 2px solid #dee2e6; transition: all 0.2s;">
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="fs-1">🩺</div>
+                                    <div>
+                                        <div class="fw-bold fs-5">Counselor</div>
+                                        <div class="text-muted small">Guide students, manage sessions & respond to posts
+                                        </div>
+                                    </div>
+                                    <div class="ms-auto"><i class="bi bi-arrow-right-circle fs-4 text-success"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                            <div class="card p-3 role-card" onclick="selectRole('admin')"
+                                style="cursor:pointer; border: 2px solid #dee2e6; transition: all 0.2s;">
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="fs-1">⚙️</div>
+                                    <div>
+                                        <div class="fw-bold fs-5">Admin</div>
+                                        <div class="text-muted small">Manage platform, users, resources & all sessions
+                                        </div>
+                                    </div>
+                                    <div class="ms-auto"><i class="bi bi-arrow-right-circle fs-4 text-danger"></i></div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <hr>
+                    <p class="text-center mb-0 text-muted">Already have an account?
+                        <a href="{% url 'login' %}">Login here</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- STEP 2: Register Form (hidden until role is selected) -->
+        <div id="step2" style="display:none;">
+            <div class="card mt-4">
+                <div class="card-header text-white text-center py-4"
+                    style="background: linear-gradient(135deg, #2c5f8a, #4a90d9);">
+                    <h4 class="mb-0" id="step2Title">Register</h4>
+                    <small class="opacity-75">Fill in your details below</small>
+                </div>
+                <div class="card-body p-4">
+
+                    <!-- Selected Role Badge -->
+                    <div class="text-center mb-3">
+                        <span id="roleBadge" class="badge fs-6 px-4 py-2"></span>
+                        <button onclick="goBack()" class="btn btn-sm btn-outline-secondary ms-2">
+                            ← Change Role
+                        </button>
+                    </div>
+
+                    <form method="post">
+                        {% csrf_token %}
+
+                        <!-- Hidden role field -->
+                        <input type="hidden" name="role" id="hiddenRole">
+
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">First Name</label>
+                                <input type="text" name="first_name" class="form-control" placeholder="First name"
+                                    required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Last Name</label>
+                                <input type="text" name="last_name" class="form-control" placeholder="Last name">
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label fw-semibold">Username</label>
+                                <input type="text" name="username" class="form-control" placeholder="Choose a username"
+                                    required>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label fw-semibold">Email</label>
+                                <input type="email" name="email" class="form-control" placeholder="Enter your email"
+                                    required>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label fw-semibold">Password</label>
+                                <input type="password" name="password1" class="form-control"
+                                    placeholder="Create a password" required>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label fw-semibold">Confirm Password</label>
+                                <input type="password" name="password2" class="form-control"
+                                    placeholder="Repeat your password" required>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-lg w-100 mt-4" id="registerBtn">
+                            Create Account
+                        </button>
+                    </form>
+
+                    <hr>
+                    <p class="text-center mb-0 text-muted">Already have an account?
+                        <a href="{% url 'login' %}">Login here</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<style>
+    .role-card:hover {
+        border-color: #4a90d9 !important;
+        background: #f0f7ff;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(74, 144, 217, 0.2);
+    }
+</style>
+
+<script>
+    function selectRole(role) {
+        document.getElementById('hiddenRole').value = role;
+        document.getElementById('step1').style.display = 'none';
+        document.getElementById('step2').style.display = 'block';
+
+        const titles = {
+            'student': { label: '🎓 Registering as Student', badge: '🎓 Student', color: '#4a90d9' },
+            'counselor': { label: '🩺 Registering as Counselor', badge: '🩺 Counselor', color: '#5cb85c' },
+            'admin': { label: '⚙️ Registering as Admin', badge: '⚙️ Admin', color: '#d9534f' },
+        };
+
+        const t = titles[role];
+        document.getElementById('step2Title').innerText = t.label;
+        document.getElementById('roleBadge').innerText = t.badge;
+        document.getElementById('roleBadge').style.background = t.color;
+        document.getElementById('registerBtn').style.background = t.color;
+        document.getElementById('registerBtn').style.borderColor = t.color;
+    }
+
+    function goBack() {
+        document.getElementById('step2').style.display = 'none';
+        document.getElementById('step1').style.display = 'block';
+    }
+</script>
+{% endblock %}

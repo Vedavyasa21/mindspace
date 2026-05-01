@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block title %}Support Posts{% endblock %}
+{% block content %}
+<h3 class="mb-4">💬 Anonymous Support Posts</h3>
+{% for post in posts %}
+<div class="card mb-3">
+    <div class="card-body">
+        <div class="d-flex justify-content-between mb-2">
+            <span class="text-muted small">Token: {{ post.token|stringformat:"s"|truncatechars:16 }} • {{ post.created_at|date:"M d, Y" }}</span>
+            <span class="badge {% if post.is_resolved %}bg-success{% else %}bg-warning text-dark{% endif %}">{% if post.is_resolved %}Resolved{% else %}Open{% endif %}</span>
+        </div>
+        <p>{{ post.message }}</p>
+        {% if post.response %}
+        <div class="bg-light p-2 rounded"><strong>Your Response:</strong> {{ post.response }}</div>
+        {% endif %}
+        {% if not post.is_resolved %}
+        <a href="{% url 'respond_to_post' post.pk %}" class="btn btn-sm btn-primary mt-2">Respond</a>
+        {% endif %}
+    </div>
+</div>
+{% empty %}
+<div class="card text-center p-5"><p class="text-muted">No posts yet.</p></div>
+{% endfor %}
+{% endblock %}

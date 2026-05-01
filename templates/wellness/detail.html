@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block title %}{{ resource.title }}{% endblock %}
+{% block content %}
+<div class="card">
+    <div class="card-header py-3" style="background:#f0f7ff;">
+        <span class="badge bg-info me-2">{{ resource.get_resource_type_display }}</span>
+        <strong>{{ resource.title }}</strong>
+    </div>
+    <div class="card-body p-4">
+        <p>{{ resource.content }}</p>
+        {% if resource.url %}<a href="{{ resource.url }}" target="_blank" class="btn btn-outline-primary">🔗 Visit Link</a>{% endif %}
+        <hr>
+        <small class="text-muted">Added on {{ resource.created_at|date:"d M Y" }}</small>
+    </div>
+</div>
+<a href="{% url 'wellness_list' %}" class="btn btn-outline-secondary mt-3">← Back</a>
+{% endblock %}

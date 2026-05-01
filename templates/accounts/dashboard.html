@@ -1,0 +1,259 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard - MindSpace{% endblock %}
+{% block content %}
+<h4 class="fw-bold mb-4">👋 Welcome, {{ user.get_full_name|default:user.username }}!
+    <span class="badge ms-2" style="background:#4a90d9; font-size:0.7rem;">{{ user.role|title }}</span>
+</h4>
+
+{% if user.role == 'admin' %}
+
+<!-- Top Welcome Bar -->
+<div class="p-4 mb-4 rounded-3" style="background: linear-gradient(135deg, #2c5f8a, #4a90d9); color: white;">
+    <h3 class="fw-bold mb-1">⚙️ Admin Control Panel</h3>
+    <p class="mb-0 opacity-75">Welcome back, {{ user.first_name }}! Here's your platform overview.</p>
+</div>
+
+<!-- Stats Cards Row -->
+<div class="row g-3 mb-4">
+    <div class="col-md-2 col-6">
+        <div class="card p-3 text-center h-100" style="border-top: 4px solid #4a90d9;">
+            <div class="fs-2 fw-bold text-primary">{{ total_users }}</div>
+            <div class="text-muted small">Total Users</div>
+            <div class="mt-1">👥</div>
+        </div>
+    </div>
+    <div class="col-md-2 col-6">
+        <div class="card p-3 text-center h-100" style="border-top: 4px solid #5cb85c;">
+            <div class="fs-2 fw-bold text-success">{{ total_students }}</div>
+            <div class="text-muted small">Students</div>
+            <div class="mt-1">🎓</div>
+        </div>
+    </div>
+    <div class="col-md-2 col-6">
+        <div class="card p-3 text-center h-100" style="border-top: 4px solid #f0ad4e;">
+            <div class="fs-2 fw-bold text-warning">{{ total_counselors }}</div>
+            <div class="text-muted small">Counselors</div>
+            <div class="mt-1">🩺</div>
+        </div>
+    </div>
+    <div class="col-md-2 col-6">
+        <div class="card p-3 text-center h-100" style="border-top: 4px solid #d9534f;">
+            <div class="fs-2 fw-bold text-danger">{{ total_sessions }}</div>
+            <div class="text-muted small">Sessions</div>
+            <div class="mt-1">📅</div>
+        </div>
+    </div>
+    <div class="col-md-2 col-6">
+        <div class="card p-3 text-center h-100" style="border-top: 4px solid #5bc0de;">
+            <div class="fs-2 fw-bold text-info">{{ total_resources }}</div>
+            <div class="text-muted small">Resources</div>
+            <div class="mt-1">📚</div>
+        </div>
+    </div>
+    <div class="col-md-2 col-6">
+        <div class="card p-3 text-center h-100" style="border-top: 4px solid #9b59b6;">
+            <div class="fs-2 fw-bold" style="color:#9b59b6;">{{ pending_posts }}</div>
+            <div class="text-muted small">Pending Posts</div>
+            <div class="mt-1">📬</div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Action Buttons -->
+<h6 class="text-muted fw-bold mb-3 text-uppercase" style="letter-spacing:1px;">⚡ Quick Actions</h6>
+<div class="row g-3 mb-4">
+    <div class="col-md-3 col-6">
+        <a href="/admin/accounts/customuser/" class="text-decoration-none">
+            <div class="card p-3 text-center h-100" style="border-left: 4px solid #4a90d9; transition: transform 0.2s;"
+                onmouseover="this.style.transform='scale(1.03)'" onmouseout="this.style.transform='scale(1)'">
+                <div class="fs-2">👤</div>
+                <div class="fw-bold text-dark">Manage Users</div>
+                <small class="text-muted">Add / Edit / Delete</small>
+            </div>
+        </a>
+    </div>
+    <div class="col-md-3 col-6">
+        <a href="{% url 'resource_create' %}" class="text-decoration-none">
+            <div class="card p-3 text-center h-100" style="border-left: 4px solid #5cb85c; transition: transform 0.2s;"
+                onmouseover="this.style.transform='scale(1.03)'" onmouseout="this.style.transform='scale(1)'">
+                <div class="fs-2">➕</div>
+                <div class="fw-bold text-dark">Add Resource</div>
+                <small class="text-muted">Articles, Videos, Tips</small>
+            </div>
+        </a>
+    </div>
+    <div class="col-md-3 col-6">
+        <a href="{% url 'my_sessions' %}" class="text-decoration-none">
+            <div class="card p-3 text-center h-100" style="border-left: 4px solid #d9534f; transition: transform 0.2s;"
+                onmouseover="this.style.transform='scale(1.03)'" onmouseout="this.style.transform='scale(1)'">
+                <div class="fs-2">📅</div>
+                <div class="fw-bold text-dark">All Sessions</div>
+                <small class="text-muted">View & Manage</small>
+            </div>
+        </a>
+    </div>
+    <div class="col-md-3 col-6">
+        <a href="{% url 'anonymous_posts' %}" class="text-decoration-none">
+            <div class="card p-3 text-center h-100" style="border-left: 4px solid #9b59b6; transition: transform 0.2s;"
+                onmouseover="this.style.transform='scale(1.03)'" onmouseout="this.style.transform='scale(1)'">
+                <div class="fs-2">📬</div>
+                <div class="fw-bold text-dark">Anonymous Posts</div>
+                <small class="text-muted">Respond to Students</small>
+            </div>
+        </a>
+    </div>
+</div>
+
+<!-- Bottom Row: Wellness + Django Admin -->
+<div class="row g-3">
+    <div class="col-md-6">
+        <div class="card h-100">
+            <div class="card-header fw-bold py-3" style="background:#f0f7ff;">
+                📚 Recent Wellness Resources
+            </div>
+            <div class="card-body p-0">
+                <table class="table table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th class="px-3">Title</th>
+                            <th>Type</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for r in recent_resources %}
+                        <tr>
+                            <td class="px-3">{{ r.title }}</td>
+                            <td><span class="badge bg-info">{{ r.get_resource_type_display }}</span></td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="2" class="text-center text-muted py-3">No resources yet</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card h-100">
+            <div class="card-header fw-bold py-3" style="background:#f0f7ff;">
+                🔧 System Management
+            </div>
+            <div class="card-body">
+                <a href="/admin/" class="btn btn-outline-dark w-100 mb-2">
+                    <i class="bi bi-gear"></i> Open Django Admin Panel
+                </a>
+                <a href="{% url 'resource_list' %}" class="btn btn-outline-primary w-100 mb-2">
+                    <i class="bi bi-heart-pulse"></i> View Wellness Resources
+                </a>
+                <a href="{% url 'profile' %}" class="btn btn-outline-secondary w-100">
+                    <i class="bi bi-person"></i> Edit My Profile
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% elif user.role == 'counselor' %}
+<div class="row g-3 mb-4">
+    <div class="col-md-3">
+        <div class="stat-card" style="background:#f0ad4e;">
+            <div class="fs-2 fw-bold">{{ pending }}</div>
+            <div>Pending Sessions</div>
+        </div>
+    </div>
+</div>
+<div class="row g-3">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header fw-bold">📅 Upcoming Sessions</div>
+            <div class="card-body">
+                {% for s in sessions %}
+                <div class="d-flex justify-content-between align-items-center border-bottom py-2">
+                    <div><strong>{{ s.student.get_full_name|default:s.student.username }}</strong><br><small
+                            class="text-muted">{{ s.date }} at {{ s.preferred_time }}</small></div>
+                    <div>
+                        <span
+                            class="badge bg-{% if s.status == 'pending' %}warning{% elif s.status == 'accepted' %}success{% else %}secondary{% endif %}">{{
+                            s.status|title }}</span>
+                        <a href="{% url 'counseling_update' s.pk %}"
+                            class="btn btn-sm btn-outline-primary ms-2">Update</a>
+                    </div>
+                </div>
+                {% empty %}<p class="text-muted">No sessions yet.</p>{% endfor %}
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header fw-bold">📬 Anonymous Posts</div>
+            <div class="card-body">
+                {% for p in posts %}
+                <div class="border-bottom py-2">
+                    <p class="mb-1 small">{{ p.message|truncatewords:10 }}</p>
+                    <a href="{% url 'respond_to_post' p.pk %}" class="btn btn-sm btn-outline-success">Respond</a>
+                </div>
+                {% empty %}<p class="text-muted">No pending posts.</p>{% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% elif user.role == 'student' %}
+<div class="row g-3 mb-4">
+    <div class="col-md-3">
+        <a href="{% url 'chat' %}" class="card p-4 text-decoration-none text-dark text-center d-block h-100"
+            style="border-left: 4px solid #4a90d9; transition: transform 0.2s;"
+            onmouseover="this.style.transform='scale(1.03)'" onmouseout="this.style.transform='scale(1)'">
+            <div class="fs-1">🤖</div>
+            <div class="fw-bold">AI Chatbot</div>
+            <small class="text-muted">Chat with Claude AI</small>
+        </a>
+    </div>
+    <div class="col-md-3">
+        <a href="{% url 'progress' %}" class="card p-4 text-decoration-none text-dark text-center d-block h-100"
+            style="border-left: 4px solid #f0ad4e; transition: transform 0.2s;"
+            onmouseover="this.style.transform='scale(1.03)'" onmouseout="this.style.transform='scale(1)'">
+            <div class="fs-1">🏆</div>
+            <div class="fw-bold">My Progress</div>
+            <small class="text-muted">Badges & Streaks</small>
+        </a>
+    </div>
+    <div class="col-md-3">
+        <a href="{% url 'resource_list' %}" class="card p-4 text-decoration-none text-dark text-center d-block h-100"
+            style="border-left: 4px solid #5cb85c; transition: transform 0.2s;"
+            onmouseover="this.style.transform='scale(1.03)'" onmouseout="this.style.transform='scale(1)'">
+            <div class="fs-1">📚</div>
+            <div class="fw-bold">Wellness Resources</div>
+            <small class="text-muted">Browse helpful content</small>
+        </a>
+    </div>
+    <div class="col-md-3">
+        <a href="{% url 'post_anonymous' %}" class="card p-4 text-decoration-none text-dark text-center d-block h-100"
+            style="border-left: 4px solid #9b59b6; transition: transform 0.2s;"
+            onmouseover="this.style.transform='scale(1.03)'" onmouseout="this.style.transform='scale(1)'">
+            <div class="fs-1">🛡️</div>
+            <div class="fw-bold">Anonymous Support</div>
+            <small class="text-muted">Share anonymously</small>
+        </a>
+    </div>
+</div>
+<div class="card">
+    <div class="card-header fw-bold">📋 My Recent Sessions</div>
+    <div class="card-body">
+        {% for s in sessions %}
+        <div class="d-flex justify-content-between align-items-center border-bottom py-2">
+            <div><strong>Dr. {{ s.counselor.get_full_name|default:s.counselor.username }}</strong><br><small
+                    class="text-muted">{{ s.date }} at {{ s.preferred_time }}</small></div>
+            <span
+                class="badge bg-{% if s.status == 'pending' %}warning{% elif s.status == 'accepted' %}success{% elif s.status == 'completed' %}info{% else %}secondary{% endif %}">{{
+                s.status|title }}</span>
+        </div>
+        {% empty %}<p class="text-muted">No sessions yet. <a href="{% url 'book_session' %}">Book your first
+                session</a></p>{% endfor %}
+    </div>
+</div>
+{% endif %}
+{% endblock %}

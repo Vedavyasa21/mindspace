@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block title %}Support Posts{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h3>💬 Anonymous Support Posts</h3>
+    <a href="{% url 'post_anonymous' %}" class="btn btn-outline-primary">+ Post Anonymously</a>
+</div>
+{% for post in posts %}
+<div class="card mb-3" style="border-left: 4px solid {% if post.is_resolved %}#5CB85C{% else %}#f0ad4e{% endif %};">
+    <div class="card-body">
+        <div class="d-flex justify-content-between mb-2">
+            <span class="text-muted small"><i class="fas fa-user-secret me-1"></i>Anonymous • {{ post.created_at|date:"M d, Y" }}</span>
+            <span class="badge {% if post.is_resolved %}bg-success{% else %}bg-warning text-dark{% endif %}">{% if post.is_resolved %}Resolved{% else %}Open{% endif %}</span>
+        </div>
+        <p>{{ post.message }}</p>
+        {% if post.response %}
+        <div class="bg-light p-3 rounded mt-2" style="border-left:3px solid #4A90D9;">
+            <strong><i class="fas fa-user-md me-1 text-primary"></i>Counselor Response:</strong>
+            <p class="mb-0 mt-1">{{ post.response }}</p>
+        </div>
+        {% else %}
+        <p class="text-muted small fst-italic">Awaiting counselor response...</p>
+        {% endif %}
+    </div>
+</div>
+{% empty %}
+<div class="card text-center p-5"><p class="text-muted">No posts yet. <a href="{% url 'post_anonymous' %}">Be the first to post.</a></p></div>
+{% endfor %}
+{% endblock %}

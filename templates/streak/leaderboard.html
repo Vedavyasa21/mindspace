@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% block title %}Wellness Leaderboard{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+            <div class="card-header bg-primary text-white text-center py-4">
+                <div class="fs-1 mb-2">🏁</div>
+                <h4 class="fw-bold mb-0">Wellness Leaderboard</h4>
+                <small class="opacity-75">Top students prioritizing mental health</small>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0 align-middle">
+                        <thead class="bg-light">
+                            <tr>
+                                <th class="px-4 text-center">Rank</th>
+                                <th>Student</th>
+                                <th class="text-end px-4">Points</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for p in top_students %}
+                            <tr {% if p.user == request.user %}class="table-primary fw-bold" {% endif %}>
+                                <td class="px-4 text-center">
+                                    {% if forloop.counter == 1 %}🥇
+                                    {% elif forloop.counter == 2 %}🥈
+                                    {% elif forloop.counter == 3 %}🥉
+                                    {% else %}{{ forloop.counter }}{% endif %}
+                                </td>
+                                <td>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <div class="avatar-sm bg-light rounded-circle text-center"
+                                            style="width:32px; height:32px; line-height:32px;">
+                                            {{ p.user.first_name|first|upper }}
+                                        </div>
+                                        <span>{{ p.user.get_full_name|default:p.user.username }}</span>
+                                    </div>
+                                </td>
+                                <td class="text-end px-4">
+                                    <span class="badge bg-primary rounded-pill">{{ p.points }}</span>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="3" class="text-center py-5 text-muted">No rankings yet. Start chatting to
+                                    earn points!</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
